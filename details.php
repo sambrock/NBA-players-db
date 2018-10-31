@@ -10,7 +10,7 @@ catch (PDOException $exception)
 
 $player_id=$_GET["id"];
 
-$query = "SELECT *,
+$stats_q = "SELECT *,
 ROUND(SUM(minutes_played / games), 1) as MP,
 ROUND(SUM((three_point_fg+two_point_fg) / games),1) as FG,
 ROUND(SUM((three_point_fga+two_point_fga) / games),1) as FGA,
@@ -30,22 +30,35 @@ ROUND(SUM(blocks / games), 1) as BLK,
 ROUND(SUM(turnovers / games), 1) as TOV,
 ROUND(SUM(points / games), 1) as PTS
 FROM players WHERE id=:id";
-$prep_stmt=$conn->prepare($query);
-$prep_stmt->bindValue(":id", $player_id);
+$stats_stmt=$conn->prepare($stats_q);
+$stats_stmt->bindValue(":id", $player_id);
 
-$prep_stmt->execute();
-$player=$prep_stmt->fetch();
+$stats_stmt->execute();
+$player=$stats_stmt->fetch();
 
+$pos_q = "SELECT players.first_name, players.last_name, positions.name
+FROM players
+INNER JOIN player_position ON players.id=player_position.player_id
+INNER JOIN positions ON player_position.position_id=positions.id WHERE players.id=:id";
+$pos_stmt=$conn->prepare($pos_q);
+$pos_stmt->bindValue(":id", $player_id);
+
+$pos_stmt->execute();
+$player_pos=$pos_stmt->fetchAll();
 ?>
 
 <html>
     <head>
         <title></title>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <link href="style/style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
         <?php
         echo "<h1>{$player["first_name"]} {$player["last_name"]}</h1>";
+        foreach($player_pos as $pos){
+            echo "<p>{$pos["name"]}</p>";
+        }
         ?>
         <table>
             <thead>
