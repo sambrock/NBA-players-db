@@ -36,7 +36,7 @@ $stats_stmt->bindValue(":id", $player_id);
 $stats_stmt->execute();
 $player=$stats_stmt->fetch();
 
-$pos_q = "SELECT players.first_name, players.last_name, positions.name
+$pos_q = "SELECT positions.name
 FROM players
 INNER JOIN player_position ON players.id=player_position.player_id
 INNER JOIN positions ON player_position.position_id=positions.id WHERE players.id=:id";
