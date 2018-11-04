@@ -1,18 +1,38 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 
+html {
+    width:100vw;
+    overflow-x:hidden;
+}
 body{
     padding: 0;
     margin: 0;
     background: #F1F1F2;
-}
-p, a{
     font-family: 'Ubuntu', sans-serif;
 }
+h1,h2,h3{
+    margin: 0;
+}
+h2{
+    margin: 0 0 15px;
+}
+a{
+    text-decoration: none;
+}
 header{
+    position: fixed;
+    top: 0;
     width: 100%;
     height: 80px;
     background: #fff;
-    border-bottom: 1px solid rgba(220,220,220, .5)
+    border-bottom: 1px solid rgba(220,220,220, .5);
+    transition: 0.2s ease all;
+    z-index: 1;
+}
+header.shrink{
+    height: 50px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 .header-inner{
     position: relative;
@@ -25,10 +45,22 @@ header{
 .logo{
     position: absolute;
     margin-top: 10px;
-    left: 0;
-/*
-    box-shadow: 0 8px 6px -8px #999;
-*/
+    left: 20;
+    height: 100px;
+    transition: 0.2s ease all;
+}
+.logo-txt{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin: auto auto 0 70px;
+    transition: 0.2s ease all;
+}
+.logo.shrink{
+    height: 50px;
+}
+.logo-txt.shrink{
+    margin-left: 50px;
 }
 nav ul{
     list-style-type: none;
@@ -37,6 +69,7 @@ nav ul{
     line-height: 30px;
     font-size: 15px;
     margin-top: 25px;
+    transition: 0.2s ease all;
 }
 nav ul li{
     display: inline-block;
@@ -44,19 +77,30 @@ nav ul li{
 }
 nav ul li:nth-child(2){
     padding-right: 0;
-}
+}/
 nav ul li a{
     color: #5C5554;
-    text-decoration: none;
+}
+nav.shrink ul{
+    margin-top: 10px;
 }
 main{
-    height: 89vh;
-    width: 100%;
+    margin-top: 80px;
+}
+.search-container{
+
+}
+form{
+    margin: 0;
 }
 .search-div{
-    max-width: 1200px;
     margin: 0 auto;
     text-align: center;
+    background: #1d428a;
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .home-search{
     border: none;
@@ -64,5 +108,124 @@ main{
     height: 50px;
     padding: 0 20px;
     border-radius: 5px;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
 }
-
+.home-search:focus{
+    outline: none;
+}
+.adv-search{
+    display: block;
+    color: #fff;
+    text-align: right;
+    font-size: 12px;
+    margin: 15px 0 0;
+    cursor: pointer;
+}
+.page-wrapper{
+    max-width: 1200px;
+    margin: 120px auto;
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px;
+}
+.page-wrapper img{
+    display: block;
+    margin: 20px auto;
+}
+.design-tbl{
+    overflow-x: auto;
+    margin: 10px 0 30px;
+}
+.design-tbl table{
+    border-collapse: collapse;
+}
+.design-tbl th{
+    background: #032f4f;
+    color: #fff;
+    font-weight: 100;
+    padding: 5px 10px;
+}
+.design-tbl td{
+    padding: 5px 10px;
+}
+.design-tbl tr:nth-child(even){
+    background: #ebebec;
+}
+.design-tbl tr:nth-child(old){
+    background: #e3e3e4;
+}
+.results-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+.results{
+    background: #fff;
+    padding: 10px;
+    top: -50px;
+}
+.results{
+    position: absolute;
+    width: 100%;
+}
+.results-header{
+    border-bottom: 1px #d8d8d9 solid;
+    margin: 0px 10px;
+    display: flex;
+    align-content: center;
+}
+.results-num{
+    color: #1D4289;
+    font-weight: 600;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+.result-stat-header{
+    margin-left: auto;
+    padding: 10px 0;
+}
+.result-stat-header span{
+    display: inline-block;
+    width: 40px;
+    padding: 0 10px;
+    text-align: left;
+    font-size: 12px;
+    color: #A9A9A9;
+}
+.filters{
+    grid-column-start: 2;
+    height: 500px;
+    top: 0;
+}
+.result-player{
+    border-bottom: 1px #d8d8d9 solid;
+    margin: 0px 10px;
+    display: flex;
+    height: 60px;
+    align-items: center;
+}
+.result-player-name{
+    font-weight: 600;
+    font-size: 20px;
+}
+.result-player-name a{
+    color: #000;
+}
+.result-player-info{
+    margin-left: 30px;
+    color: #1D4289;
+}
+.result-player-stats{
+    margin-left: auto;
+}
+.result-stat{
+    display: inline-block;
+    width: 40px;
+    padding: 0 10px;
+    font-size: 20px;
+    text-align: right;
+    border-right: 1px #d8d8d9 solid;
+}
+.result-stat:nth-child(1){
+    border-left: 1px #d8d8d9 solid;
+}
