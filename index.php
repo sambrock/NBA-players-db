@@ -8,25 +8,18 @@ catch (PDOException $exception)
     echo "Oh no, there was a problem" . $exception->getMessage();
 }
 
-if(isset($_GET['q'])){
+$searchterm = [];
+
+
     $searchterm="%{$_GET["q"]}%";
 
-    $query = "SELECT *, players.first_name, players.last_name, players.id as player_id, teams.id as team_id, ROUND(SUM(points / games), 1) as PTS, ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB, ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK FROM players INNER JOIN teams ON players.team_id=teams.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm OR teams.name LIKE :searchterm GROUP BY players.last_name";
+
+    $query = "SELECT players.first_name, players.last_name, players.id as player_id, teams.id as team_id, players.number, teams.abbreviation, ROUND(SUM(points / games), 1) as PTS, ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB, ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK FROM players INNER JOIN teams ON players.team_id=teams.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm OR teams.name LIKE :searchterm GROUP BY players.last_name";
     $prep_stmt=$conn->prepare($query);
-    $prep_stmt->bindValue(":searchterm", $searchterm);
+    $prep_stmt->bindValue(':searchterm', '%' . $searchterm . '%');
 
     $prep_stmt->execute();
     $players=$prep_stmt->fetchAll();
-
-    $pos_q = "SELECT positions.name
-    FROM players
-    INNER JOIN player_position ON players.id=player_position.player_id
-    INNER JOIN positions ON player_position.position_id=positions.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm";
-    $pos_stmt=$conn->prepare($pos_q);
-    $pos_stmt->bindValue(":searchterm", $searchterm);
-
-    $pos_stmt->execute();
-    $player_pos=$pos_stmt->fetch();
 
     $count_stmt = "SELECT COUNT(players.last_name) as count FROM players INNER JOIN teams ON players.team_id=teams.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm OR teams.name LIKE :searchterm";
     $count_stmt=$conn->prepare($count_stmt);
@@ -34,7 +27,7 @@ if(isset($_GET['q'])){
 
     $count_stmt->execute();
     $count=$count_stmt->fetch();
-}
+
 
 ?>
 <html lang="en">
@@ -60,12 +53,47 @@ if(isset($_GET['q'])){
         </header>
         <main>
             <div class="search-container">
-                <div class="search-div">
-                    <form action="index.php" method="GET">
-                        <input type="text" class="home-search" name="q" id="search" placeholder="Search by player, team or position">
-                        <span class="adv-search">Advanced search</span>
-                    </form>
-                </div>
+                <form action="index.php" method="GET" id="search-form">
+                    <div class="search-box">
+                        <input type="text" class="form-control" name="q" id="search" placeholder="Search by player, team or position"><button type="sumbit" class="search-btn"></button>
+                    </div>
+                    <div class="filters">
+                        <select name="t" placeholder="Team" class="form-control">
+                            <option value="" hidden>Team</option>
+                            <option value="ATL">Atlanta Hawks</option>
+                            <option value="BOS">Boston Celtics</option>
+                            <option value="BKN">Brooklyn Nets</option>
+                            <option value="CHA">Charlotte Hornets</option>
+                            <option value="CHI">Chicago Bulls</option>
+                            <option value="CLE">Cleaveland Cavaliers</option>
+                            <option value="DAL">Dallas Mavericks</option>
+                            <option value="DEN">Denver Nuggets</option>
+                            <option value="DET">Detroit Pistons</option>
+                            <option value="GSW">Golden State Warriors</option>
+                            <option value="HOU">Houston Rockets</option>
+                            <option value="IND">Indiana Pacers</option>
+                            <option value="LAC">Los Angeles Clippers</option>
+                            <option value="LAL">Los Angeles Lakers</option>
+                            <option value="MEM">Memphis Grizzlies</option>
+                            <option value="MIA">Miami Heat</option>
+                            <option value="MIL">Milwaukee Bucks</option>
+                            <option value="MIN">Minnesota Timberwolves</option>
+                            <option value="NOP">New Orleans Pelicans</option>
+                            <option value="NYK">New York Knicks</option>
+                            <option value="OKC">Oklahoma City Thunder</option>
+                            <option value="ORL">Orlando Magic</option>
+                            <option value="PHI">Philadelphia 76ers</option>
+                            <option value="PHX">Phoenix Suns</option>
+                            <option value="POR">Portland Trail Blazers</option>
+                        </select>
+                        <select name="p" placeholder="Position" class="form-control">
+                            <option value="" hidden>Position</option>
+                            <option value="G">Guard</option>
+                            <option value="F">Forward</option>
+                            <option value="C">Center</option>
+                        </select>
+                    </div>
+                </form>
             </div>
             <?php if(isset($_GET['q'])){ ?>
             <div class="results-container">
