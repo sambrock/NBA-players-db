@@ -8,25 +8,37 @@ catch (PDOException $exception)
     echo "Oh no, there was a problem" . $exception->getMessage();
 }
 
-$searchterm = [];
+if(isset($_GET['q'])){
+    $searchterm=$_GET["q"];
+}
+if(isset($_GET['t'])){
+    $team=$_GET["t"];
+}
+if(isset($_GET['p'])){
+    $position=$_GET["p"];
+}
 
 
-    $searchterm="%{$_GET["q"]}%";
+$query = "SELECT players.first_name, players.last_name, players.id as player_id, teams.id as team_id, players.number, teams.abbreviation, ROUND(SUM(points / games), 1) as PTS, ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB, ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK FROM players
+INNER JOIN teams ON players.team_id=teams.id INNER JOIN player_position ON players.id=player_position.player_id INNER JOIN positions ON player_position.position_id=positions.id
+WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm)  OR :searchterm IS NULL)
+AND (teams.abbreviation = :team OR :team IS NULL)
+AND (positions.name = :position OR :position IS NULL)
+GROUP BY players.last_name";
+$prep_stmt=$conn->prepare($query);
+$prep_stmt->bindValue(':searchterm', '%' . $searchterm . '%');
+$prep_stmt->bindValue(':team', $team);
+$prep_stmt->bindValue(':position', $position);
 
+$prep_stmt->execute();
+$players=$prep_stmt->fetchAll();
 
-    $query = "SELECT players.first_name, players.last_name, players.id as player_id, teams.id as team_id, players.number, teams.abbreviation, ROUND(SUM(points / games), 1) as PTS, ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB, ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK FROM players INNER JOIN teams ON players.team_id=teams.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm OR teams.name LIKE :searchterm GROUP BY players.last_name";
-    $prep_stmt=$conn->prepare($query);
-    $prep_stmt->bindValue(':searchterm', '%' . $searchterm . '%');
+$count_stmt = "SELECT COUNT(players.last_name) as count FROM players INNER JOIN teams ON players.team_id=teams.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm OR teams.name LIKE :searchterm";
+$count_stmt=$conn->prepare($count_stmt);
+$count_stmt->bindValue(":searchterm", $searchterm);
 
-    $prep_stmt->execute();
-    $players=$prep_stmt->fetchAll();
-
-    $count_stmt = "SELECT COUNT(players.last_name) as count FROM players INNER JOIN teams ON players.team_id=teams.id WHERE first_name LIKE :searchterm OR last_name LIKE :searchterm OR teams.name LIKE :searchterm";
-    $count_stmt=$conn->prepare($count_stmt);
-    $count_stmt->bindValue(":searchterm", $searchterm);
-
-    $count_stmt->execute();
-    $count=$count_stmt->fetch();
+$count_stmt->execute();
+$count=$count_stmt->fetch();
 
 
 ?>
@@ -95,7 +107,7 @@ $searchterm = [];
                     </div>
                 </form>
             </div>
-            <?php if(isset($_GET['q'])){ ?>
+            <?php if(isset($_GET['q']) || ($_GET['t']) || ($_GET['p'])){ ?>
             <div class="results-container">
                 <div class="results">
                     <div class="results-header">
@@ -108,13 +120,13 @@ $searchterm = [];
                         </div>
                     </div>
                     <?php
-                        foreach($players as $player){
-                            echo "<div class='result-player'>";
-                            echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
-                            echo "<div class='result-player-info'>#{$player["number"]} | <span></span> | {$player["abbreviation"]}</div>";
-                            echo "<div class='result-player-stats'><span class='result-stat'>{$player["PTS"]}</span><span class='result-stat'>{$player["REB"]}</span><span class='result-stat'>{$player["AST"]}</span><span class='result-stat'>{$player["BLK"]}</span></div>";
-                            echo "</div>";
-                        }
+                                                                        foreach($players as $player){
+                                                                            echo "<div class='result-player'>";
+                                                                            echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                                                                            echo "<div class='result-player-info'>#{$player["number"]} | <span></span> | {$player["abbreviation"]}</div>";
+                                                                            echo "<div class='result-player-stats'><span class='result-stat'>{$player["PTS"]}</span><span class='result-stat'>{$player["REB"]}</span><span class='result-stat'>{$player["AST"]}</span><span class='result-stat'>{$player["BLK"]}</span></div>";
+                                                                            echo "</div>";
+                                                                        }
                     ?>
                 </div>
             </div>
