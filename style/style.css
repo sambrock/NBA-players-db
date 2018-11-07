@@ -33,6 +33,7 @@ header{
 }
 header.shrink{
     height: 50px;
+    background: #1d428a;
     box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 .header-inner{
@@ -62,6 +63,7 @@ header.shrink{
 }
 .logo-txt.shrink{
     margin-left: 50px;
+    color: #fff;
 }
 nav ul{
     list-style-type: none;
@@ -85,6 +87,9 @@ nav ul li a{
 nav.shrink ul{
     margin-top: 10px;
 }
+nav.shrink ul li a{
+    color: #fff;
+}
 main{
     margin-top: 80px;
 }
@@ -97,9 +102,6 @@ main{
     align-items: center;
     justify-content: center;
     transition: 0.2s ease-in all;
-}
-.search-container.shrink{
-    height: 200px;
 }
 form{
     margin: 0;
@@ -249,7 +251,6 @@ form{
 .result-stat:nth-child(1){
     border-left: 1px #d8d8d9 solid;
 }
-
 .filters{
     display: block;
     height: auto;
@@ -260,7 +261,6 @@ form{
 .filters select{
     -webkit-appearance: none;
     appearance: none;
-
     display: ;
     padding: 5px 20px 5px 10px;
     background: transparent;
@@ -276,5 +276,19 @@ form{
 }
 .filters select option{
     color: #000;
-
+}
+.stats-tbl table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.stats-tbl th{
+    background: #032f4f;
+    color: #fff;
+    font-weight: 100;
+}
+.stats-tbl th, .stats-tbl td{
+    height: 30px;
+    font-size: 12px;
+    text-align: right;
+    padding: 0 3px;
 }
