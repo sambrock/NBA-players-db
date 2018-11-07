@@ -51,7 +51,7 @@ $player_award = $player_award_set->fetchAll();
                 <nav>
                     <ul>
                         <li><a href="index.php">Search</a></li>
-                        <li><a href="index.php">Design</a></li>
+                        <li><a href="design.php">Design</a></li>
                     </ul>
                 </nav>
             </div>
