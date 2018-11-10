@@ -12,6 +12,10 @@ $players_q  = "SELECT * FROM players";
 $players_set = $conn->query($players_q);
 $players = $players_set->fetchAll();
 
+$stats_q  = "SELECT * FROM statistics";
+$stats_set = $conn->query($stats_q);
+$stats = $stats_set->fetchAll();
+
 $teams_q  = "SELECT * FROM teams";
 $teams_set = $conn->query($teams_q);
 $teams = $teams_set->fetchAll();
@@ -76,6 +80,33 @@ $player_award = $player_award_set->fetchAll();
                                 <th>weight</th>
                                 <th>date_of_birth</th>
                                 <th>number</th>
+                                <th>team_id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            foreach($players as $player){
+                                echo "<tr>";
+                                echo "<td>{$player["id"]}</td>";
+                                echo "<td>{$player["last_name"]}</td>";
+                                echo "<td>{$player["first_name"]}</td>";
+                                echo "<td>{$player["height"]}</td>";
+                                echo "<td>{$player["weight"]}</td>";
+                                echo "<td>{$player["date_of_birth"]}</td>";
+                                echo "<td>{$player["number"]}</td>";
+                                echo "<td>{$player["team_id"]}</td>";
+                                echo "</tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>players</h3>
+                <div class="design-tbl">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>player_id</th>
                                 <th>games</th>
                                 <th>minutes_played</th>
                                 <th>three_point_fg</th>
@@ -91,36 +122,28 @@ $player_award = $player_award_set->fetchAll();
                                 <th>blocks</th>
                                 <th>turnovers</th>
                                 <th>points</th>
-                                <th>team_id</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            foreach($players as $player){
+                            foreach($stats as $stat){
                                 echo "<tr>";
-                                echo "<td>{$player["id"]}</td>";
-                                echo "<td>{$player["last_name"]}</td>";
-                                echo "<td>{$player["first_name"]}</td>";
-                                echo "<td>{$player["height"]}</td>";
-                                echo "<td>{$player["weight"]}</td>";
-                                echo "<td>{$player["date_of_birth"]}</td>";
-                                echo "<td>{$player["number"]}</td>";
-                                echo "<td>{$player["games"]}</td>";
-                                echo "<td>{$player["minutes_played"]}</td>";
-                                echo "<td>{$player["three_point_fg"]}</td>";
-                                echo "<td>{$player["three_point_fga"]}</td>";
-                                echo "<td>{$player["two_point_fg"]}</td>";
-                                echo "<td>{$player["two_point_fga"]}</td>";
-                                echo "<td>{$player["free_throws"]}</td>";
-                                echo "<td>{$player["free_throws_attempted"]}</td>";
-                                echo "<td>{$player["offensive_rebounds"]}</td>";
-                                echo "<td>{$player["defensive_rebounds"]}</td>";
-                                echo "<td>{$player["assists"]}</td>";
-                                echo "<td>{$player["steals"]}</td>";
-                                echo "<td>{$player["blocks"]}</td>";
-                                echo "<td>{$player["turnovers"]}</td>";
-                                echo "<td>{$player["points"]}</td>";
-                                echo "<td>{$player["team_id"]}</td>";
+                                echo "<td>{$stat["player_id"]}</td>";
+                                echo "<td>{$stat["games"]}</td>";
+                                echo "<td>{$stat["minutes_played"]}</td>";
+                                echo "<td>{$stat["three_point_fg"]}</td>";
+                                echo "<td>{$stat["three_point_fga"]}</td>";
+                                echo "<td>{$stat["two_point_fg"]}</td>";
+                                echo "<td>{$stat["two_point_fga"]}</td>";
+                                echo "<td>{$stat["free_throws"]}</td>";
+                                echo "<td>{$stat["free_throws_attempted"]}</td>";
+                                echo "<td>{$stat["offensive_rebounds"]}</td>";
+                                echo "<td>{$stat["defensive_rebounds"]}</td>";
+                                echo "<td>{$stat["assists"]}</td>";
+                                echo "<td>{$stat["steals"]}</td>";
+                                echo "<td>{$stat["blocks"]}</td>";
+                                echo "<td>{$stat["turnovers"]}</td>";
+                                echo "<td>{$stat["points"]}</td>";
                                 echo "</tr>";
                             }
                             ?>
