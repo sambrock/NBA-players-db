@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
-
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700,800');
 
 html {
     width:100vw;
@@ -237,6 +236,10 @@ form{
     margin-left: 30px;
     color: #1D4289;
 }
+.result-player-info span:nth-child(2):before{
+    content:"-";
+    background: #fff;
+}
 .result-player-stats{
     margin-left: auto;
 }
@@ -291,4 +294,102 @@ form{
     font-size: 12px;
     text-align: right;
     padding: 0 3px;
+}
+.details-container{
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    margin: 30px 0;
+}
+.player-details{
+    grid-column: 1;
+}
+.player-img{
+    grid-column: 2;
+    height: 500px;
+}
+.player-img img{
+    display: block;
+    max-width:100%;
+    max-height:500px;
+    width: auto;
+    height: auto;
+    margin: 0;
+    margin-left: auto;
+}
+.player-fname, .player-lname{
+    font-family: 'Montserrat', sans-serif;
+}
+.player-fname{
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 30px;
+}
+.player-lname{
+    font-size: 60px;
+    padding: 0;
+    margin: 0;
+    line-height: 60px;
+    font-weight: 600;
+    display: inline-block;
+    margin: 0 40px 0 0;
+    padding: 0 0 20px 0;
+    border-bottom: 2px solid #1D4289;
+}
+.player-info{
+    border: 1px solid #A9A9A9 ;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    bottom: 15;
+    position: relative;
+}
+.player-info img{
+    height: 30px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+}
+.player-info span{
+    font-size: 20px;
+    color: #A9A9A9 ;
+    vertical-align: middle;
+}
+.player-measurements{
+    display: grid;
+    grid-template-columns: 120px 120px;
+    grid-template-rows: 30px 55px;
+    margin: 20px 0 0 0;
+    border-bottom: 2px solid #1D4289;
+    width: 200px;
+}
+.player-height{
+    grid-column: 1;
+}
+.player-weight{
+     grid-column: 2;
+}
+.player-measurements span{
+    color: #A9A9A9;
+    font-size: 15px;
+}
+.measurement{
+    font-size: 30px !important;
+    font-weight: 600;
+    line-height: 30px;
+    color: #000 !important;
+}
+.player-awards{
+    display: grid;
+    grid-template-columns: 120px 200px;
+    grid-template-rows: repeat(20px);
+    margin: 20px 0 0 0;
+    width: 200px;
+}
+.player-awards span{
+    color: #A9A9A9;
+    margin: 5px 0;
+}
+.award{
+    color: #000 !important;
+    font-weight: 600;
 }
