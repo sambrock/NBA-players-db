@@ -10,7 +10,11 @@ catch (PDOException $exception)
 
 $player_id=$_GET["id"];
 
-$stats_q = "SELECT first_name, last_name, height, weight, date_of_birth, number, games,
+$stats_q = "SELECT first_name, last_name, date_of_birth, abbreviation, name, number, games,
+FLOOR(height/(12*2.54)) as ft,
+ROUND((height mod(12*2.54))/2.54) as inch,
+ROUND(SUM(weight*2.2046226218)) as lbs,
+CONCAT(MONTHNAME(date_of_birth),' ', DAY(date_of_birth), ', ', YEAR(date_of_birth)) as DOB,
 ROUND(SUM(minutes_played / games), 1) as MP,
 ROUND(SUM((three_point_fg+two_point_fg) / games),1) as FG,
 ROUND(SUM((three_point_fga+two_point_fga) / games),1) as FGA,
@@ -20,7 +24,7 @@ ROUND(SUM(three_point_fga / games), 1) as 3PA,
 ROUND(SUM((three_point_fg / three_point_fga)),3) as 3PP,
 ROUND(SUM(free_throws / games), 1) as FT,
 ROUND(SUM(free_throws_attempted / games), 1) as FTA,
-ROUND(SUM((free_throws / free_throws_attempted)),3) as FTP,
+ROUND(SUM(free_throws / free_throws_attempted),3) as FTP,
 ROUND(SUM(offensive_rebounds / games),1) as OREB,
 ROUND(SUM(defensive_rebounds / games),1) as DREB,
 ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB,
@@ -29,7 +33,8 @@ ROUND(SUM(steals / games), 1) as STL,
 ROUND(SUM(blocks / games), 1) as BLK,
 ROUND(SUM(turnovers / games), 1) as TOV,
 ROUND(SUM(points / games), 1) as PTS
-FROM players WHERE id=:id";
+FROM players INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id=teams.id
+WHERE players.id=:id";
 $stats_stmt=$conn->prepare($stats_q);
 $stats_stmt->bindValue(":id", $player_id);
 
@@ -46,9 +51,7 @@ $pos_stmt->bindValue(":id", $player_id);
 $pos_stmt->execute();
 $player_pos=$pos_stmt->fetchAll();
 
-$awards_q ="SELECT name, year FROM awards
-INNER JOIN player_award ON awards.id = player_award.award_id INNER JOIN players ON player_award.player_id = players.id
-WHERE players.id = :id";
+$awards_q ="SELECT name, GROUP_CONCAT(year SEPARATOR ', ') as year FROM awards INNER JOIN player_award ON awards.id = player_award.award_id INNER JOIN players ON player_award.player_id = players.id WHERE players.id = :id GROUP BY awards.name";
 $awards_stmt=$conn->prepare($awards_q);
 $awards_stmt->bindValue(":id", $player_id);
 
@@ -80,12 +83,40 @@ $awards=$awards_stmt->fetchAll();
         </header>
         <main>
             <div class="page-wrapper">
-                <?php
-                echo "<h1>{$player["first_name"]} {$player["last_name"]}</h1>";
-                foreach($player_pos as $pos){
-                    echo "<p>{$pos["name"]}</p>";
-                }
-                ?>
+                <div class="details-container">
+                    <div class="player-details">
+                        <div class="player-fname"> <?php echo "{$player["first_name"]}"; ?></div>
+                        <div class="player-lname"> <?php echo "".strtoupper($player["last_name"]).""; ?></div>
+                        <div class="player-info">
+                            <?php
+                            echo "<img src='img/teams/{$player["abbreviation"]}.png'> ";
+                            echo "<span> | #{$player["number"]} | </span>";
+                            foreach($player_pos as $pos){
+                                echo "<span>{$pos["name"]}</span>";
+                            }
+                            ?>
+                        </div>
+                        <div class="player-measurements">
+                            <span>Height</span><span>Weight</span>
+                            <div class="player-height"><?php echo "<span class='measurement'>{$player["ft"]}</span><span class='unit'>ft </span><span class='measurement'>{$player["inch"]}</span><span class='unit'>in</span>" ?></div>
+                            <div class="player-weight"><?php echo "<span class='measurement'>{$player["lbs"]}</span><span class='unit'>lbs</span>" ?></div>
+                        </div>
+                        <div class="player-awards">
+                            <span>Born:</span>
+                            <?php echo "<span class='award'>{$player["DOB"]}</span>"; ?>
+                            <span>Team:</span>
+                            <?php echo "<span class='award'>{$player["name"]}</span>"; ?>
+                            <?php
+                            foreach($awards as $award){
+                                echo "<span>{$award["name"]}:</span> <span class='award'>{$award["year"]}</span>";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="player-img">
+                        <img src="img/players/<?php echo "".strtolower($player["first_name"])."-".strtolower($player["last_name"]).""; ?>.jpg">
+                    </div>
+                </div>
                 <div class="stats-tbl">
                     <table>
                         <thead>
@@ -138,12 +169,9 @@ $awards=$awards_stmt->fetchAll();
                         </tbody>
                     </table>
                 </div>
-                <?php
-                    foreach($awards as $award){
-                        echo "<p>{$award["name"]}: {$award["year"]}</p>";
-                    }
-                ?>
-                </div>
+
+
+            </div>
         </main>
     </body>
 </html>
