@@ -63,9 +63,9 @@ $player_award = $player_award_set->fetchAll();
         <main>
             <div class="page-wrapper">
                 <h2>Class diagram</h2>
-                <img src="img/class.svg" height="500">
+                <img src="img/class.svg" height="600">
                 <h2>Physical data model</h2>
-                <img src="img/physical.svg" height="500">
+                <img src="img/physical.svg" height="600">
                 <h2>Database tables</h2>
 
                 <h3>players</h3>
