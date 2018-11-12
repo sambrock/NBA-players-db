@@ -58,11 +58,24 @@ $awards_stmt->bindValue(":id", $player_id);
 $awards_stmt->execute();
 $awards=$awards_stmt->fetchAll();
 
+$player_team=$player["abbreviation"];
+$player_pts=$player["PTS"];
+$player_position=$player_pos[0]["name"];
+
+$related_q ="SELECT first_name, last_name, SUM(points / games) as PTS, teams.abbreviation as team FROM players INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id = teams.id INNER JOIN player_position ON players.id=player_position.player_id INNER JOIN positions ON player_position.position_id=positions.id WHERE (NOT players.id=:id AND (abbreviation=:team OR positions.name=:position)) GROUP BY abbreviation, last_name ORDER BY FIELD(team, '".$player_team."') DESC, ABS(SUM(points/games)-".$player_pts.") LIMIT 3";
+$related_stmt=$conn->prepare($related_q);
+$related_stmt->bindValue(":id", $player_id);
+$related_stmt->bindValue(":team", $player_team);
+$related_stmt->bindValue(":position", $player_position);
+
+$related_stmt->execute();
+$related_players=$related_stmt->fetchAll();
+
 ?>
 
 <html>
     <head>
-        <title></title>
+        <title><?php echo "{$player["first_name"]} {$player["last_name"]}" ?> - NBA Player Search</title>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
         <link href="style/style.css" type="text/css" rel="stylesheet" />
     </head>
@@ -169,9 +182,12 @@ $awards=$awards_stmt->fetchAll();
                         </tbody>
                     </table>
                 </div>
-
-
             </div>
+            <?php
+                foreach($related_players as $player){
+                    echo "<p>{$player["first_name"]} {$player["last_name"]}</p>";
+                }
+            ?>
         </main>
     </body>
 </html>
