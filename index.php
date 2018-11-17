@@ -24,7 +24,6 @@ if(!isset($_GET["pg"])){
     $page = $_GET["pg"];
 }
 
-$page = $_GET["pg"];
 $results_per_page = 8;
 $offset = ($page-1)*$results_per_page;
 
@@ -68,6 +67,7 @@ $number_of_pages = ceil($count/$results_per_page);
         <title><?php if(isset($_GET['q'])){ echo "{$searchterm} - "; }  ?>NBA Player Search</title>
         <link href="style/style.css" rel="stylesheet" type="text/css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
@@ -145,7 +145,7 @@ $number_of_pages = ceil($count/$results_per_page);
                 <?php if($players){ ?>
                 <div class="results">
                     <div class="results-header">
-                        <span class="results-num"><?php echo $count; echo " ".$count; ?> results</span>
+                        <span class="results-num"><?php echo $count; ?> results</span>
                         <div class="result-stat-header">
                             <span>PTS</span>
                             <span>REB</span>
@@ -170,21 +170,42 @@ $number_of_pages = ceil($count/$results_per_page);
                     ?>
                 </div>
             </div>
-            <?php
-               for ($page=1;$page<=$number_of_pages;$page++){
-                   echo "<a href='index.php?";
-                   if(isset($_GET['q'])){
-                       echo "q=".$searchterm."&";
-                   }
-                   if(isset($_GET['t'])){
-                       echo "t=".$team."&";
-                   }
-                   if(isset($_GET['p'])){
-                       echo "p=".$position."&";
-                   }
-                   echo "pg=".$page."'>".$page."</a>";
-               }
-            ?>
+            <div class="pagination">
+                <ul>
+                    <?php
+                       if($number_of_pages!=1){
+                           if($page==1){
+                               echo "<li><i class='fas fa-chevron-left'></i></li>";
+                           }else{
+                               echo "<li><a href='index.php?".str_replace('&pg='.$_GET["pg"], '&pg='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
+                           }
+                           for ($page_num=1;$page_num<=$number_of_pages;$page_num++){
+                               if($page_num == $page){
+                                   echo "<li class='pg active'>".$page."</li>";
+                               }else{
+                                   echo"<li><a href='index.php?";
+                                   if(isset($_GET['q'])){
+                                       echo "q=".$searchterm."&";
+                                   }
+                                   if(isset($_GET['t'])){
+                                       echo "t=".$team."&";
+                                   }
+                                   if(isset($_GET['p'])){
+                                       echo "p=".$position."&";
+                                   }
+                                   echo "pg=".$page_num."'>".$page_num."</a></li>";
+                               }
+                           }
+                           if($page==$number_of_pages){
+                               echo "<li><i class='fas fa-chevron-right'></i></li>";
+                           }else{
+                               echo "<li><a href='index.php?".str_replace('&pg='.$_GET["pg"], '&pg='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
+                           }
+                       }
+                    ?>
+                </ul>
+            </div>
+
             <?php } else { echo "<div class='no-results'>No reuslts</div>"; } } ?>
         </main>
         <script src="js/js.js"></script>
