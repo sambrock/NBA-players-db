@@ -15,3 +15,9 @@ $("#search-form").submit(function() {
         }
     });
 });
+
+$( document ).ready(function() {
+    //set height of results container to height of child absolute element
+    $height = $(".results").height();
+    $(".results-container").css("height", $height);
+});
