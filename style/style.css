@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700,800');
 
-html {
-    width:100vw;
-    overflow-x:hidden;
-}
 body{
     padding: 0;
     margin: 0;
@@ -19,7 +15,9 @@ h2{
 }
 a{
     text-decoration: none;
+    color: #fff;
 }
+
 header{
     position: fixed;
     top: 0;
@@ -144,7 +142,7 @@ form{
 }
 .page-wrapper{
     max-width: 1200px;
-    margin: 120px auto;
+    margin: 120px auto 20px;
     background: #fff;
     border-radius: 5px;
     padding: 10px;
@@ -175,19 +173,22 @@ form{
 .design-tbl tr:nth-child(old){
     background: #e3e3e4;
 }
-.results-container{
+.results-container {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
+    padding: 0 5px;
 }
-.results{
+.results, .no-results{
     background: #fff;
     padding: 10px;
     top: -50px;
-}
-.results{
+    width: auto;
     position: absolute;
-    width: 100%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 .results-header{
     border-bottom: 1px #d8d8d9 solid;
@@ -264,15 +265,14 @@ form{
 .filters select{
     -webkit-appearance: none;
     appearance: none;
-    display: ;
-    padding: 5px 20px 5px 10px;
+    padding: 5px 25px 5px 0;
     background: transparent;
     border: none;
     color: #fff;
     background: url(../img/down.svg) no-repeat 95% center;
     background-size: 10px 10px;
     cursor: pointer;
-    margin-right: 20px;
+    margin: 0 20px 0 0;
 }
 .filters select:focus{
     outline: none;
@@ -285,7 +285,7 @@ form{
     border-collapse: collapse;
 }
 .stats-tbl th{
-    color: #A7B0B2;
+    color: #8c989a;
     font-weight: 100;
 }
 .stats-tbl th, .stats-tbl td{
@@ -351,7 +351,7 @@ form{
     border-bottom: 2px solid #1D4289;
 }
 .player-info{
-    border: 1px solid #A7B0B2 ;
+    border: 1px solid #8c989a ;
     padding: 5px;
     border-radius: 5px;
     display: inline-block;
@@ -366,7 +366,7 @@ form{
 }
 .player-info span{
     font-size: 20px;
-    color: #A7B0B2;
+    color: #8c989a;
     vertical-align: middle;
 }
 .player-measurements{
@@ -384,7 +384,7 @@ form{
     grid-column: 2;
 }
 .player-measurements span{
-    color: #A9A9A9;
+    color: #8c989a;
     font-size: 15px;
 }
 .measurement{
@@ -401,10 +401,78 @@ form{
     width: 200px;
 }
 .player-awards span{
-    color: #A9A9A9;
+    color: #8c989a;
     margin: 5px 0;
 }
 .award{
     color: #000 !important;
     font-weight: 600;
+}
+.related-players{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1220px;
+    margin: 0 auto;
+    grid-gap: 10px;
+}
+.related-player{
+    background: #fff;
+    padding: 10px;
+    border-right: 5px;
+    display: flex;
+    justify-content: center;
+}
+.related-player-name{
+    font-weight: 600;
+    font-size: 20px;
+    display: inline-block;
+    margin: 10px auto 0 0;
+}
+.related-player-name a{
+    color: #000;
+}
+.related-player-info{
+    border: 1px solid #8c989a;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+.related-player-info img{
+    height: 30px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+}
+.related-player-info span{
+    font-size: 20px;
+    color: #8c989a;
+    vertical-align: middle;
+}
+.pagination{
+    margin: 0 auto;
+    text-align: center;
+}
+.pagination ul{
+    padding: 0;
+    background: #fff;
+    display: inline-block;
+    text-align: center;
+}
+.pagination ul li{
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: 600;
+    margin: 8px 0;
+    width: auto;
+}
+.pagination ul li a, .pagination ul li i{
+    color: #8c989a;
+}
+.pagination ul li a:hover, .pagination ul li i:hover{
+    color: #1d428a;
+}
+.pg.active{
+    background: #1d428a;
+    color: #fff;
+    border-radius: 5px;
 }
