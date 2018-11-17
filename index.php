@@ -18,12 +18,31 @@ if(isset($_GET['p'])){
     $position=$_GET["p"];
 }
 
-$query = "SELECT DISTINCT players.first_name, players.last_name, players.id as player_id, teams.id as team_id, players.number, teams.abbreviation, ROUND(SUM(points / games), 1) as PTS, ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB, ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK
-FROM players INNER JOIN player_position ON players.id=player_position.player_id INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id=teams.id
+if(!isset($_GET["pg"])){
+    $page = 1;
+}else{
+    $page = $_GET["pg"];
+}
+
+$page = $_GET["pg"];
+$results_per_page = 8;
+$offset = ($page-1)*$results_per_page;
+
+$query = "SELECT DISTINCT players.first_name, players.last_name, players.id as player_id, teams.id as team_id, players.number, teams.abbreviation,
+ROUND(SUM(points / games), 1) as PTS,
+ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB,
+ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK,
+(
+SELECT count(*) FROM players WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
+AND (teams.abbreviation = :team OR :team IS NULL)
+AND (positions.name = :position OR :position IS NULL)
+) as num_of_results
+FROM players INNER JOIN player_position ON players.id=player_position.player_id
+INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id=teams.id
 WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
 AND (teams.abbreviation = :team OR :team IS NULL)
 AND (positions.name = :position OR :position IS NULL)
-GROUP BY last_name, positions.name";
+GROUP BY players.id, positions.name LIMIT 8 OFFSET ".$offset."";
 $prep_stmt=$conn->prepare($query);
 $prep_stmt->bindValue(':searchterm', '%' . $searchterm . '%');
 $prep_stmt->bindValue(':team', $team);
@@ -32,14 +51,15 @@ $prep_stmt->bindValue(':position', $position);
 $prep_stmt->execute();
 $players=$prep_stmt->fetchAll();
 
-$count = count($players);
-
 $pos_q = "SELECT players.id as player_id, positions.name
 FROM players INNER JOIN player_position ON players.id=player_position.player_id INNER JOIN positions ON player_position.position_id=positions.id";
 $pos_stmt=$conn->prepare($pos_q);
 
 $pos_stmt->execute();
 $positions=$pos_stmt->fetchAll();
+
+$count = ($players[0]["num_of_results"]);
+$number_of_pages = ceil($count/$results_per_page);
 
 ?>
 <html lang="en">
@@ -109,6 +129,7 @@ $positions=$pos_stmt->fetchAll();
                             <option value="F">Forward</option>
                             <option value="C">Center</option>
                         </select>
+                        <input type="hidden" name="pg" value="1">
                         <script>
                             <?php if(isset($_GET['t'])){ ?>
                             document.getElementById('team-select').value = "<?php echo "$team";?>";
@@ -121,9 +142,10 @@ $positions=$pos_stmt->fetchAll();
             </div>
             <?php if(isset($_GET['q']) || isset($_GET['t']) || isset($_GET['p'])){ ?>
             <div class="results-container">
+                <?php if($players){ ?>
                 <div class="results">
                     <div class="results-header">
-                        <span class="results-num"><?php echo $count; ?> results</span>
+                        <span class="results-num"><?php echo $count; echo " ".$count; ?> results</span>
                         <div class="result-stat-header">
                             <span>PTS</span>
                             <span>REB</span>
@@ -132,23 +154,38 @@ $positions=$pos_stmt->fetchAll();
                         </div>
                     </div>
                     <?php
-                      foreach($players as $player){
-                          echo "<div class='result-player'>";
-                          echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
-                          echo "<div class='result-player-info'>#{$player["number"]} | ";
-                          foreach($positions as $pos){
-                             if($pos["player_id"] == $player["player_id"]){
-                                 echo "<span>{$pos["name"]}</span>";
-                             }
-                          }
-                          echo " | {$player["abbreviation"]}</div>";
-                          echo "<div class='result-player-stats'><span class='result-stat'>{$player["PTS"]}</span><span class='result-stat'>{$player["REB"]}</span><span class='result-stat'>{$player["AST"]}</span><span class='result-stat'>{$player["BLK"]}</span></div>";
-                          echo "</div>";
-                      }
+                       foreach($players as $player){
+                           echo "<div class='result-player'>";
+                           echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                           echo "<div class='result-player-info'>#{$player["number"]} | ";
+                           foreach($positions as $pos){
+                               if($pos["player_id"] == $player["player_id"]){
+                                   echo "<span>{$pos["name"]}</span>";
+                               }
+                           }
+                           echo " | {$player["abbreviation"]}</div>";
+                           echo "<div class='result-player-stats'><span class='result-stat'>{$player["PTS"]}</span><span class='result-stat'>{$player["REB"]}</span><span class='result-stat'>{$player["AST"]}</span><span class='result-stat'>{$player["BLK"]}</span></div>";
+                           echo "</div>";
+                       }
                     ?>
                 </div>
             </div>
-            <?php } ?>
+            <?php
+               for ($page=1;$page<=$number_of_pages;$page++){
+                   echo "<a href='index.php?";
+                   if(isset($_GET['q'])){
+                       echo "q=".$searchterm."&";
+                   }
+                   if(isset($_GET['t'])){
+                       echo "t=".$team."&";
+                   }
+                   if(isset($_GET['p'])){
+                       echo "p=".$position."&";
+                   }
+                   echo "pg=".$page."'>".$page."</a>";
+               }
+            ?>
+            <?php } else { echo "<div class='no-results'>No reuslts</div>"; } } ?>
         </main>
         <script src="js/js.js"></script>
     </body>
