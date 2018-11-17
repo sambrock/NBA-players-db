@@ -32,7 +32,9 @@ ROUND(SUM(points / games), 1) as PTS,
 ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB,
 ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK,
 (
-SELECT count(*) FROM players WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
+SELECT count(*) FROM players INNER JOIN player_position ON players.id=player_position.player_id
+INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id=teams.id
+WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
 AND (teams.abbreviation = :team OR :team IS NULL)
 AND (positions.name = :position OR :position IS NULL)
 ) as num_of_results
