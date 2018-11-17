@@ -40,7 +40,7 @@ $player_award = $player_award_set->fetchAll();
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Design</title>
+        <title>Design - NBA Player Search</title>
         <link href="style/style.css" rel="stylesheet" type="text/css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -101,7 +101,7 @@ $player_award = $player_award_set->fetchAll();
                         </tbody>
                     </table>
                 </div>
-                <h3>players</h3>
+                <h3>statistics</h3>
                 <div class="design-tbl">
                     <table>
                         <thead>
