@@ -13,7 +13,7 @@ $player_id=$_GET["id"];
 $stats_q = "SELECT first_name, last_name, date_of_birth, abbreviation, name, number, games,
 FLOOR(height/(12*2.54)) as ft,
 ROUND((height mod(12*2.54))/2.54) as inch,
-ROUND(SUM(weight*2.2046226218)) as lbs,
+CEILING(ROUND(SUM(weight*2.2046226218)/5)*5) as lbs,
 CONCAT(MONTHNAME(date_of_birth),' ', DAY(date_of_birth), ', ', YEAR(date_of_birth)) as DOB,
 ROUND(SUM(minutes_played / games), 1) as MP,
 ROUND(SUM((three_point_fg+two_point_fg) / games),1) as FG,
@@ -62,7 +62,7 @@ $player_team=$player["abbreviation"];
 $player_pts=$player["PTS"];
 $player_position=$player_pos[0]["name"];
 
-$related_q ="SELECT first_name, last_name, SUM(points / games) as PTS, teams.abbreviation as team FROM players INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id = teams.id INNER JOIN player_position ON players.id=player_position.player_id INNER JOIN positions ON player_position.position_id=positions.id WHERE (NOT players.id=:id AND (abbreviation=:team OR positions.name=:position)) GROUP BY abbreviation, last_name ORDER BY FIELD(team, '".$player_team."') DESC, ABS(SUM(points/games)-".$player_pts.") LIMIT 3";
+$related_q ="SELECT players.id as player_id, first_name, last_name, SUM(points / games) as PTS, teams.abbreviation as team, number, positions.name as position FROM players INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id = teams.id INNER JOIN player_position ON players.id=player_position.player_id INNER JOIN positions ON player_position.position_id=positions.id WHERE (NOT players.id=:id AND (abbreviation=:team OR positions.name=:position)) GROUP BY abbreviation, last_name ORDER BY FIELD(team, '".$player_team."') DESC, ABS(SUM(points/games)-".$player_pts.") LIMIT 3";
 $related_stmt=$conn->prepare($related_q);
 $related_stmt->bindValue(":id", $player_id);
 $related_stmt->bindValue(":team", $player_team);
@@ -127,7 +127,7 @@ $related_players=$related_stmt->fetchAll();
                         </div>
                     </div>
                     <div class="player-img">
-                        <img src="img/players/<?php echo "".strtolower($player["first_name"])."-".strtolower($player["last_name"]).""; ?>.jpg">
+                        <?php echo "<img src='img/players/".strtolower($player["first_name"])."-".strtolower($player["last_name"]).".jpg' alt='".$player["first_name"]." ".$player["last_name"]."'/>";?>
                     </div>
                 </div>
                 <div class="stats-tbl">
@@ -183,11 +183,20 @@ $related_players=$related_stmt->fetchAll();
                     </table>
                 </div>
             </div>
-            <?php
-                foreach($related_players as $player){
-                    echo "<p>{$player["first_name"]} {$player["last_name"]}</p>";
-                }
-            ?>
+                <div class="related-players">
+                    <?php
+                        foreach($related_players as $player){
+                            echo "<div class='related-player'>";
+                            echo "<div class='related-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                            echo "<div class='related-player-info'>";
+                            echo "<img src='img/teams/{$player["team"]}.png'> ";
+                            echo "<span> | #{$player["number"]} | </span>";
+                            echo "<span>{$player["position"]}</span>";
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                    ?>
+                </div>
         </main>
     </body>
 </html>
