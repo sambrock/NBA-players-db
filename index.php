@@ -18,10 +18,10 @@ if(isset($_GET['p'])){
     $position=$_GET["p"];
 }
 
-if(!isset($_GET["pg"])){
+if(!isset($_GET["page"])){
     $page = 1;
 }else{
-    $page = $_GET["pg"];
+    $page = $_GET["page"];
 }
 
 $results_per_page = 8;
@@ -32,7 +32,7 @@ ROUND(SUM(points / games), 1) as PTS,
 ROUND(SUM((offensive_rebounds + defensive_rebounds) / games),1) as REB,
 ROUND(SUM(assists / games), 1) as AST, ROUND(SUM(blocks / games), 1) as BLK,
 (
-SELECT count(*) FROM players INNER JOIN player_position ON players.id=player_position.player_id
+SELECT count(DISTINCT players.id) FROM players INNER JOIN player_position ON players.id=player_position.player_id
 INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN statistics ON players.id=statistics.player_id INNER JOIN teams ON players.team_id=teams.id
 WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
 AND (teams.abbreviation = :team OR :team IS NULL)
@@ -43,7 +43,7 @@ INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN stat
 WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
 AND (teams.abbreviation = :team OR :team IS NULL)
 AND (positions.name = :position OR :position IS NULL)
-GROUP BY players.id, positions.name LIMIT 8 OFFSET ".$offset."";
+GROUP BY players.id, positions.name ORDER BY PTS DESC LIMIT 8 OFFSET ".$offset."";
 $prep_stmt=$conn->prepare($query);
 $prep_stmt->bindValue(':searchterm', '%' . $searchterm . '%');
 $prep_stmt->bindValue(':team', $team);
@@ -131,7 +131,7 @@ $number_of_pages = ceil($count/$results_per_page);
                             <option value="F">Forward</option>
                             <option value="C">Center</option>
                         </select>
-                        <input type="hidden" name="pg" value="1">
+                        <input type="hidden" name="page" value="1">
                         <script>
                             <?php if(isset($_GET['t'])){ ?>
                             document.getElementById('team-select').value = "<?php echo "$team";?>";
@@ -179,11 +179,11 @@ $number_of_pages = ceil($count/$results_per_page);
                            if($page==1){
                                echo "<li><i class='fas fa-chevron-left'></i></li>";
                            }else{
-                               echo "<li><a href='index.php?".str_replace('&pg='.$_GET["pg"], '&pg='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
+                               echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
                            }
                            for ($page_num=1;$page_num<=$number_of_pages;$page_num++){
                                if($page_num == $page){
-                                   echo "<li class='pg active'>".$page."</li>";
+                                   echo "<li class='page active'>".$page."</li>";
                                }else{
                                    echo"<li><a href='index.php?";
                                    if(isset($_GET['q'])){
@@ -195,13 +195,13 @@ $number_of_pages = ceil($count/$results_per_page);
                                    if(isset($_GET['p'])){
                                        echo "p=".$position."&";
                                    }
-                                   echo "pg=".$page_num."'>".$page_num."</a></li>";
+                                   echo "page=".$page_num."'>".$page_num."</a></li>";
                                }
                            }
                            if($page==$number_of_pages){
                                echo "<li><i class='fas fa-chevron-right'></i></li>";
                            }else{
-                               echo "<li><a href='index.php?".str_replace('&pg='.$_GET["pg"], '&pg='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
+                               echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
                            }
                        }
                     ?>
