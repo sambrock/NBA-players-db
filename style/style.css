@@ -449,14 +449,16 @@ form{
     vertical-align: middle;
 }
 .pagination{
-    margin: 0 auto;
-    text-align: center;
+    max-width: 1200px;
+    margin: -20px auto 0;
+    text-align: left;
 }
 .pagination ul{
     padding: 0;
     background: #fff;
     display: inline-block;
     text-align: center;
+    margin: 0 0 0 -5px;
 }
 .pagination ul li{
     display: inline-block;
@@ -471,7 +473,7 @@ form{
 .pagination ul li a:hover, .pagination ul li i:hover{
     color: #1d428a;
 }
-.pg.active{
+.page.active{
     background: #1d428a;
     color: #fff;
     border-radius: 5px;
