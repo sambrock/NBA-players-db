@@ -118,8 +118,6 @@ form{
     box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
 }
 .search-btn{
-    background: url("../img/search.svg") no-repeat center;
-    background-size: 20px 20px;
     height: 50px;
     width: 50px;
     background-color: #fff;
@@ -129,6 +127,10 @@ form{
     border-bottom-right-radius: 5px;
     border: none;
     cursor: pointer;
+    color: #1d428a;
+}
+.search-btn i{
+    font-size: 20px;
 }
 #search:focus, .search-btn:focus{
     outline: none;
@@ -224,6 +226,7 @@ form{
 .player-info{
     bottom: 15;
     position: relative;
+    margin: 0px 20px;
 }
 .related-player-info{
     margin: 0 0 0 auto;
@@ -390,7 +393,6 @@ form{
     line-height: 60px;
     font-weight: 600;
     display: inline-block;
-    margin: 0 40px 0 0;
     padding: 0 0 20px 0;
     border-bottom: 2px solid #1D4289;
 }
