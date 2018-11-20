@@ -48,10 +48,8 @@ $player_award = $player_award_set->fetchAll();
     <body>
         <header>
             <div class="header-inner">
-                <img class="logo" src="img/nba-logo.png">
-                <div class="logo-txt">
-                    NBA PLAYER SEARCH
-                </div>
+                <a href="index.php"><img class="logo" src="img/nba-logo.png"></a>
+                <div class="logo-txt"><a href="index.php">NBA PLAYER SEARCH</a></div>
                 <nav>
                     <ul>
                         <li><a href="index.php">Search</a></li>

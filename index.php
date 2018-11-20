@@ -77,8 +77,8 @@ $number_of_pages = ceil($count/$results_per_page);
     <body>
         <header>
             <div class="header-inner">
-                <img class="logo" src="img/nba-logo.png">
-                <div class="logo-txt">NBA PLAYER SEARCH</div>
+                <a href="index.php"><img class="logo" src="img/nba-logo.png"></a>
+                <div class="logo-txt"><a href="index.php">NBA PLAYER SEARCH</a></div>
                 <nav>
                     <ul>
                         <li><a href="index.php">Search</a></li>
@@ -146,7 +146,6 @@ $number_of_pages = ceil($count/$results_per_page);
             </div>
             <?php if(isset($_GET['q']) || isset($_GET['t']) || isset($_GET['p'])){ ?>
             <div class="results-container">
-
                 <div class="results">
                     <div class="results-header">
                         <span class="results-num"><?php echo $count; ?> results</span>
