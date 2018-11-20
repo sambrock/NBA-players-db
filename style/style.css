@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700,800');
 
+/* global */
 body{
     padding: 0;
     margin: 0;
@@ -17,7 +18,6 @@ a{
     text-decoration: none;
     color: #fff;
 }
-
 header{
     position: fixed;
     top: 0;
@@ -90,6 +90,7 @@ nav.shrink ul li a{
 main{
     margin-top: 80px;
 }
+/* search */
 .search-container{
     margin: 0 auto 28px;
     text-align: center;
@@ -151,44 +152,23 @@ form{
     display: block;
     margin: 20px auto;
 }
-.design-tbl{
-    overflow-x: auto;
-    margin: 10px 0 30px;
-}
-.design-tbl table{
-    border-collapse: collapse;
-}
-.design-tbl th{
-    background: #032f4f;
-    color: #fff;
-    font-weight: 100;
-    padding: 5px 10px;
-}
-.design-tbl td{
-    padding: 5px 10px;
-}
-.design-tbl tr:nth-child(even){
-    background: #ebebec;
-}
-.design-tbl tr:nth-child(old){
-    background: #e3e3e4;
-}
 .results-container {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
     padding: 0 5px;
 }
-.results, .no-results{
+.results{
     background: #fff;
     padding: 10px;
-    top: -50px;
+    top: -60px;
     width: auto;
     position: absolute;
     left: 0;
     right: 0;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 5px;
 }
 .results-header{
     border-bottom: 1px #d8d8d9 solid;
@@ -233,27 +213,60 @@ form{
 .result-player-name a{
     color: #000;
 }
-.result-player-info{
-    margin-left: 30px;
-    color: #1D4289;
+.result-player-info, .player-info, .related-player-info{
+    border: 1px solid #8c989a ;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 0px 30px;
+    color: #8c989a;
 }
-.result-player-info span:nth-child(2):before{
+.player-info{
+    bottom: 15;
+    position: relative;
+}
+.related-player-info{
+    margin: 0 0 0 auto;
+}
+.result-player-info span:nth-child(4):before, .player-info span:nth-child(4):before{
     content:"-";
     background: #fff;
 }
+.player-info img, .result-player-info img, .related-player-info img{
+    height: 30px;
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+}
+.player-info span, .result-player-info span, .related-player-info span{
+    color: #8c989a;
+    vertical-align: middle;
+}
 .result-player-stats{
     margin-left: auto;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    color: #000;
+    height: 30px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    background: #e5e5e5;
 }
-.result-stat{
+.result-player-stats span{
     display: inline-block;
     width: 40px;
     padding: 0 10px;
-    font-size: 20px;
     text-align: right;
     border-right: 1px #d8d8d9 solid;
+    font-size: 17px;
 }
-.result-stat:nth-child(1){
-    border-left: 1px #d8d8d9 solid;
+.result-player-stats span:last-child{
+    border: none;
+}
+.no-results{
+    margin: 10px 10px;
 }
 .filters{
     display: block;
@@ -280,6 +293,37 @@ form{
 .filters select option{
     color: #000;
 }
+.pagination{
+    max-width: 1200px;
+    margin: -20px auto 0;
+    text-align: left;
+}
+.pagination ul{
+    padding: 0;
+    background: #fff;
+    display: inline-block;
+    text-align: center;
+    margin: 0 0 0 -5px;
+}
+.pagination ul li{
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: 600;
+    margin: 8px 0;
+    width: auto;
+}
+.pagination ul li a, .pagination ul li i{
+    color: #8c989a;
+}
+.pagination ul li a:hover, .pagination ul li i:hover{
+    color: #1d428a;
+}
+.page.active{
+    background: #1d428a;
+    color: #fff;
+    border-radius: 5px;
+}
+/* details */
 .stats-tbl table{
     width: 100%;
     border-collapse: collapse;
@@ -350,25 +394,6 @@ form{
     padding: 0 0 20px 0;
     border-bottom: 2px solid #1D4289;
 }
-.player-info{
-    border: 1px solid #8c989a ;
-    padding: 5px;
-    border-radius: 5px;
-    display: inline-block;
-    bottom: 15;
-    position: relative;
-}
-.player-info img{
-    height: 30px;
-    display: inline-block;
-    margin: 0;
-    vertical-align: middle;
-}
-.player-info span{
-    font-size: 20px;
-    color: #8c989a;
-    vertical-align: middle;
-}
 .player-measurements{
     display: grid;
     grid-template-columns: 120px 120px;
@@ -431,50 +456,26 @@ form{
 .related-player-name a{
     color: #000;
 }
-.related-player-info{
-    border: 1px solid #8c989a;
-    padding: 5px;
-    border-radius: 5px;
-    display: inline-block;
+/* design */
+.design-tbl{
+    overflow-x: auto;
+    margin: 10px 0 30px;
 }
-.related-player-info img{
-    height: 30px;
-    display: inline-block;
-    margin: 0;
-    vertical-align: middle;
+.design-tbl table{
+    border-collapse: collapse;
 }
-.related-player-info span{
-    font-size: 20px;
-    color: #8c989a;
-    vertical-align: middle;
-}
-.pagination{
-    max-width: 1200px;
-    margin: -20px auto 0;
-    text-align: left;
-}
-.pagination ul{
-    padding: 0;
-    background: #fff;
-    display: inline-block;
-    text-align: center;
-    margin: 0 0 0 -5px;
-}
-.pagination ul li{
-    display: inline-block;
-    padding: 5px 10px;
-    font-weight: 600;
-    margin: 8px 0;
-    width: auto;
-}
-.pagination ul li a, .pagination ul li i{
-    color: #8c989a;
-}
-.pagination ul li a:hover, .pagination ul li i:hover{
-    color: #1d428a;
-}
-.page.active{
-    background: #1d428a;
+.design-tbl th{
+    background: #032f4f;
     color: #fff;
-    border-radius: 5px;
+    font-weight: 100;
+    padding: 5px 10px;
+}
+.design-tbl td{
+    padding: 5px 10px;
+}
+.design-tbl tr:nth-child(even){
+    background: #ebebec;
+}
+.design-tbl tr:nth-child(old){
+    background: #e3e3e4;
 }
