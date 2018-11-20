@@ -49,17 +49,23 @@ header.shrink{
     transition: 0.2s ease all;
 }
 .logo-txt{
+    margin: auto auto 0 70px;
+    transition: 0.2s ease all;
+}
+.logo-txt a{
     font-family: 'Montserrat', sans-serif;
     font-size: 22px;
     font-weight: 600;
-    margin: auto auto 0 70px;
-    transition: 0.2s ease all;
+    color: #000;
 }
 .logo.shrink{
     height: 50px;
 }
 .logo-txt.shrink{
     margin-left: 50px;
+    color: #fff;
+}
+.logo-txt.shrink a{
     color: #fff;
 }
 nav ul{
@@ -128,6 +134,10 @@ form{
     border: none;
     cursor: pointer;
     color: #1d428a;
+    transition: 0.2s ease-in all;
+}
+.search-btn:hover{
+    color: #8c989a;
 }
 .search-btn i{
     font-size: 20px;
