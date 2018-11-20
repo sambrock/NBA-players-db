@@ -445,19 +445,32 @@ form{
     color: #000 !important;
     font-weight: 600;
 }
+.related-players-container{
+    max-width: 1220px;
+    margin: 0 auto;
+    border-radius: 5px;
+    background: #fff;
+}
+.related-players-container h3{
+    margin: 10px;
+    padding: 5px 0 10px;
+    display: inline-block;
+    border-bottom: 2px solid #1D4289;
+    font-size: 20px;
+}
 .related-players{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    max-width: 1220px;
-    margin: 0 auto;
     grid-gap: 10px;
 }
 .related-player{
     background: #fff;
     padding: 10px;
-    border-right: 5px;
     display: flex;
     justify-content: center;
+    border-radius: 5px;
+    border: 1px solid #8c989a;
+    margin: 10px 10px 10px 10px;
 }
 .related-player-name{
     font-weight: 600;

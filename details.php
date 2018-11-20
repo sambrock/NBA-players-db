@@ -183,21 +183,23 @@ $related_players=$related_stmt->fetchAll();
                     </table>
                 </div>
             </div>
-            <h3>Related Players</h3>
-            <div class="related-players">
+            <div class="related-players-container">
+                <h3>Related Players</h3>
+                <div class="related-players">
                     <?php
-                        foreach($related_players as $player){
-                            echo "<div class='related-player'>";
-                            echo "<div class='related-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
-                            echo "<div class='related-player-info'>";
-                            echo "<img src='img/teams/{$player["team"]}.png'> ";
-                            echo "<span> | #{$player["number"]} | </span>";
-                            echo "<span>{$player["position"]}</span>";
-                            echo "</div>";
-                            echo "</div>";
-                        }
+                    foreach($related_players as $player){
+                        echo "<div class='related-player'>";
+                        echo "<div class='related-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                        echo "<div class='related-player-info'>";
+                        echo "<img src='img/teams/{$player["team"]}.png'> ";
+                        echo "<span> | #{$player["number"]} | </span>";
+                        echo "<span>{$player["position"]}</span>";
+                        echo "</div>";
+                        echo "</div>";
+                    }
                     ?>
                 </div>
+            </div>
         </main>
         <script src="js/js.js"></script>
     </body>
