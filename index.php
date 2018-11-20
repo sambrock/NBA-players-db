@@ -91,7 +91,7 @@ $number_of_pages = ceil($count/$results_per_page);
             <div class="search-container">
                 <form action="index.php" method="GET" id="search-form">
                     <div class="search-box">
-                        <input type="text" class="form-control" name="q" id="search" placeholder="Search by player name" value="<?php if(isset($_GET['q'])){ echo "$searchterm"; } ?>"><button type="sumbit" class="search-btn"></button>
+                        <input type="text" class="form-control" name="q" id="search" placeholder="Search by player name" value="<?php if(isset($_GET['q'])){ echo "$searchterm"; } ?>"><button type="sumbit" class="search-btn"><i class="fas fa-search"></i></button>
                     </div>
                     <div class="filters">
                         <select name="t" placeholder="Team" id="team-select" class="form-control" >
