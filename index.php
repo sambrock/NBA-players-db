@@ -3,8 +3,7 @@ try{
     $conn = new PDO('mysql:host=localhost;dbname=u1663363', 'root', '');
     $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 }
-catch (PDOException $exception)
-{
+catch (PDOException $exception){
     echo "Oh no, there was a problem" . $exception->getMessage();
 }
 
@@ -43,9 +42,9 @@ INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN stat
 WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
 AND (teams.abbreviation = :team OR :team IS NULL)
 AND (positions.name = :position OR :position IS NULL)
-GROUP BY players.id, positions.name ORDER BY PTS DESC LIMIT 8 OFFSET ".$offset."";
+GROUP BY players.id, positions.name LIMIT 8 OFFSET ".$offset."";
 $prep_stmt=$conn->prepare($query);
-$prep_stmt->bindValue(':searchterm', '%' . $searchterm . '%');
+$prep_stmt->bindValue(':searchterm', '%'.$searchterm.'%');
 $prep_stmt->bindValue(':team', $team);
 $prep_stmt->bindValue(':position', $position);
 
@@ -60,6 +59,9 @@ $pos_stmt->execute();
 $positions=$pos_stmt->fetchAll();
 
 $count = ($players[0]["num_of_results"]);
+if($count == null){
+    $count = 0;
+}
 $number_of_pages = ceil($count/$results_per_page);
 
 ?>
@@ -144,31 +146,34 @@ $number_of_pages = ceil($count/$results_per_page);
             </div>
             <?php if(isset($_GET['q']) || isset($_GET['t']) || isset($_GET['p'])){ ?>
             <div class="results-container">
-                <?php if($players){ ?>
+
                 <div class="results">
                     <div class="results-header">
                         <span class="results-num"><?php echo $count; ?> results</span>
                         <div class="result-stat-header">
-                            <span>PTS</span>
-                            <span>REB</span>
-                            <span>AST</span>
-                            <span>BLK</span>
+                            <span><abbr title="Points">PTS</abbr></span>
+                            <span><abbr title="Rebonds">REB</abbr></span>
+                            <span><abbr title="Assists">AST</abbr></span>
+                            <span><abbr title="Blocks">BLK</abbr></span>
                         </div>
                     </div>
                     <?php
-                       foreach($players as $player){
-                           echo "<div class='result-player'>";
-                           echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
-                           echo "<div class='result-player-info'>#{$player["number"]} | ";
-                           foreach($positions as $pos){
-                               if($pos["player_id"] == $player["player_id"]){
-                                   echo "<span>{$pos["name"]}</span>";
+                      if($players){
+                           foreach($players as $player){
+                               echo "<div class='result-player'>";
+                               echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                               echo "<div class='result-player-info'>";
+                               echo "<img src='img/teams/{$player["abbreviation"]}.png'> ";
+                               echo "<span> | #{$player["number"]} | </span>";
+                               foreach($positions as $pos){
+                                   if($pos["player_id"] == $player["player_id"]){
+                                       echo "<span>{$pos["name"]}</span>";
+                                   }
                                }
+                               echo "</div>";
+                               echo "<div class='result-player-stats'><span>{$player["PTS"]}</span><span>{$player["REB"]}</span><span>{$player["AST"]}</span><span>{$player["BLK"]}</span></div>";
+                               echo "</div>";
                            }
-                           echo " | {$player["abbreviation"]}</div>";
-                           echo "<div class='result-player-stats'><span class='result-stat'>{$player["PTS"]}</span><span class='result-stat'>{$player["REB"]}</span><span class='result-stat'>{$player["AST"]}</span><span class='result-stat'>{$player["BLK"]}</span></div>";
-                           echo "</div>";
-                       }
                     ?>
                 </div>
             </div>
@@ -207,8 +212,7 @@ $number_of_pages = ceil($count/$results_per_page);
                     ?>
                 </ul>
             </div>
-
-            <?php } else { echo "<div class='no-results'>No reuslts</div>"; } } ?>
+            <?php } else { echo "<div class='no-results'>Your search returned no results. Please adjust your search.</div>"; } }?>
         </main>
         <script src="js/js.js"></script>
     </body>
