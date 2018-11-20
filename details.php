@@ -127,7 +127,7 @@ $related_players=$related_stmt->fetchAll();
                         </div>
                     </div>
                     <div class="player-img">
-                        <?php echo "<img src='img/players/".strtolower($player["first_name"])."-".strtolower($player["last_name"]).".jpg' alt='".$player["first_name"]." ".$player["last_name"]."'/>";?>
+                        <?php echo '<img src="img/players/'.strtolower($player["first_name"]).'-'.strtolower($player["last_name"]).'.jpg" alt="'.$player["first_name"].' '.$player["last_name"].'"/>';?>
                     </div>
                 </div>
                 <div class="stats-tbl">
