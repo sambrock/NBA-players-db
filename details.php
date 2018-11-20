@@ -78,6 +78,8 @@ $related_players=$related_stmt->fetchAll();
         <title><?php echo "{$player["first_name"]} {$player["last_name"]}" ?> - NBA Player Search</title>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
         <link href="style/style.css" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
         <header>
@@ -198,5 +200,6 @@ $related_players=$related_stmt->fetchAll();
                     ?>
                 </div>
         </main>
+        <script src="js/js.js"></script>
     </body>
 </html>
