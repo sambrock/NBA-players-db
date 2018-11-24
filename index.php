@@ -23,8 +23,8 @@ if(!isset($_GET["page"])){
     $page = $_GET["page"];
 }
 
-$results_per_page = 8;
-$offset = ($page-1)*$results_per_page;
+$limit = 8;
+$offset = ($page-1)*$limit;
 
 $query = "SELECT DISTINCT players.first_name, players.last_name, players.id as player_id, teams.id as team_id, players.number, teams.abbreviation,
 ROUND(SUM(points / games), 1) as PTS,
@@ -42,11 +42,13 @@ INNER JOIN positions ON player_position.position_id=positions.id INNER JOIN stat
 WHERE ((first_name LIKE :searchterm OR last_name LIKE :searchterm OR CONCAT(first_name,' ', last_name) LIKE :searchterm) OR :searchterm IS NULL)
 AND (teams.abbreviation = :team OR :team IS NULL)
 AND (positions.name = :position OR :position IS NULL)
-GROUP BY players.id, positions.name LIMIT 8 OFFSET ".$offset."";
+GROUP BY players.id, positions.name LIMIT :limit OFFSET :offset";
 $prep_stmt=$conn->prepare($query);
 $prep_stmt->bindValue(':searchterm', '%'.$searchterm.'%');
 $prep_stmt->bindValue(':team', $team);
 $prep_stmt->bindValue(':position', $position);
+$prep_stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+$prep_stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
 
 $prep_stmt->execute();
 $players=$prep_stmt->fetchAll();
@@ -62,7 +64,7 @@ $count = ($players[0]["num_of_results"]);
 if($count == null){
     $count = 0;
 }
-$number_of_pages = ceil($count/$results_per_page);
+$number_of_pages = ceil($count/$limit);
 
 ?>
 <html lang="en">
@@ -94,53 +96,56 @@ $number_of_pages = ceil($count/$results_per_page);
                         <input type="text" class="form-control" name="q" id="search" placeholder="Search by player name" value="<?php if(isset($_GET['q'])){ echo "$searchterm"; } ?>"><button type="sumbit" class="search-btn"><i class="fas fa-search"></i></button>
                     </div>
                     <div class="filters">
-                        <select name="t" placeholder="Team" id="team-select" class="form-control" >
-                            <option value="">Team</option>
-                            <option value="ATL">Atlanta Hawks</option>
-                            <option value="BOS">Boston Celtics</option>
-                            <option value="BKN">Brooklyn Nets</option>
-                            <option value="CHA">Charlotte Hornets</option>
-                            <option value="CHI">Chicago Bulls</option>
-                            <option value="CLE">Cleaveland Cavaliers</option>
-                            <option value="DAL">Dallas Mavericks</option>
-                            <option value="DEN">Denver Nuggets</option>
-                            <option value="DET">Detroit Pistons</option>
-                            <option value="GSW">Golden State Warriors</option>
-                            <option value="HOU">Houston Rockets</option>
-                            <option value="IND">Indiana Pacers</option>
-                            <option value="LAC">Los Angeles Clippers</option>
-                            <option value="LAL">Los Angeles Lakers</option>
-                            <option value="MEM">Memphis Grizzlies</option>
-                            <option value="MIA">Miami Heat</option>
-                            <option value="MIL">Milwaukee Bucks</option>
-                            <option value="MIN">Minnesota Timberwolves</option>
-                            <option value="NOP">New Orleans Pelicans</option>
-                            <option value="NYK">New York Knicks</option>
-                            <option value="OKC">Oklahoma City Thunder</option>
-                            <option value="ORL">Orlando Magic</option>
-                            <option value="PHI">Philadelphia 76ers</option>
-                            <option value="PHX">Phoenix Suns</option>
-                            <option value="POR">Portland Trail Blazers</option>
-                            <option value="SAC">Sacramento Kings</option>
-                            <option value="SAS">San Antonio Spurs</option>
-                            <option value="TOR">Toronto Raptors</option>
-                            <option value="UTA">Utah Jazz</option>
-                            <option value="WAS">Washington Wizards</option>
-                        </select>
-                        <select name="p" placeholder="Position" id="position-select" class="form-control">
-                            <option value="">Position</option>
-                            <option value="G">Guard</option>
-                            <option value="F">Forward</option>
-                            <option value="C">Center</option>
-                        </select>
+                        <div class="drop-down-holder">
+                            <div class="drop-down" id="drop-down-team" id="team"><?php if(isset($_GET['t'])){ echo $team; } else { echo "Team";}; ?></div>
+                            <div class="drop-down-items" id="items-team">
+                                <ul>
+                                    <li data-value="ATL">Atlanta Hawks</li>
+                                    <li data-value="BOS">Boston Celtics</li>
+                                    <li data-value="BKN">Brooklyn Nets</li>
+                                    <li data-value="CHA">Charlotte Hornets</li>
+                                    <li data-value="CHI">Chicago Bulls</li>
+                                    <li data-value="CLE">Cleaveland Cavaliers</li>
+                                    <li data-value="DAL">Dallas Mavericks</li>
+                                    <li data-value="DEN">Denver Nuggets</li>
+                                    <li data-value="DET">Detroit Pistons</li>
+                                    <li data-value="GSW">Golden State Warriors</li>
+                                    <li data-value="HOU">Houston Rockets</li>
+                                    <li data-value="IND">Indiana Pacers</li>
+                                    <li data-value="LAC">Los Angeles Clippers</li>
+                                    <li data-value="LAL">Los Angeles Lakers</li>
+                                    <li data-value="MEM">Memphis Grizzlies</li>
+                                    <li data-value="MIA">Miami Heat</li>
+                                    <li data-value="MIL">Milwaukee Bucks</li>
+                                    <li data-value="MIN">Minnesota Timberwolves</li>
+                                    <li data-value="NOP">New Orleans Pelicans</li>
+                                    <li data-value="NYK">New York Knicks</li>
+                                    <li data-value="OKC">Oklahoma City Thunder</li>
+                                    <li data-value="ORL">Orlando Magic</li>
+                                    <li data-value="PHI">Philadelphia 76ers</li>
+                                    <li data-value="PHX">Phoenix Suns</li>
+                                    <li data-value="POR">Portland Trail Blazers</li>
+                                    <li data-value="SAC">Sacramento Kings</li>
+                                    <li data-value="SAS">San Antonio Spurs</li>
+                                    <li data-value="TOR">Toronto Raptors</li>
+                                    <li data-value="UTA">Utah Jazz</li>
+                                    <li data-value="WAS">Washington Wizards</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="drop-down-holder">
+                            <div class="drop-down" id="drop-down-position" id="position"><?php if(isset($_GET['p'])){ echo $position; } else { echo "Position";}; ?></div>
+                            <div class="drop-down-items" id="items-position">
+                                <ul>
+                                    <li data-value="G">Guard</li>
+                                    <li data-value="F">Forward</li>
+                                    <li data-value="C">Center</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="hidden" name="t" value="<?php if(isset($_GET['t'])){ echo $team; }?>" id="team-select" class="form-control">
+                        <input type="hidden" name="p" value="<?php if(isset($_GET['p'])){ echo $position; }?>" id="position-select" class="form-control">
                         <input type="hidden" name="page" value="1">
-                        <script>
-                            <?php if(isset($_GET['t'])){ ?>
-                            document.getElementById('team-select').value = "<?php echo "$team";?>";
-                            <?php } if(isset($_GET['p'])){ ?>
-                            document.getElementById('position-select').value = "<?php echo "$position";?>";
-                            <?php } ?>
-                        </script>
                     </div>
                 </form>
             </div>
@@ -158,56 +163,56 @@ $number_of_pages = ceil($count/$results_per_page);
                     </div>
                     <?php
                       if($players){
-                           foreach($players as $player){
-                               echo "<div class='result-player'>";
-                               echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
-                               echo "<div class='result-player-info'>";
-                               echo "<img src='img/teams/{$player["abbreviation"]}.png'> ";
-                               echo "<span> | #{$player["number"]} | </span>";
-                               foreach($positions as $pos){
-                                   if($pos["player_id"] == $player["player_id"]){
-                                       echo "<span>{$pos["name"]}</span>";
-                                   }
-                               }
-                               echo "</div>";
-                               echo "<div class='result-player-stats'><span>{$player["PTS"]}</span><span>{$player["REB"]}</span><span>{$player["AST"]}</span><span>{$player["BLK"]}</span></div>";
-                               echo "</div>";
-                           }
+                          foreach($players as $player){
+                              echo "<div class='result-player'>";
+                              echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                              echo "<div class='result-player-info'>";
+                              echo "<img src='img/teams/{$player["abbreviation"]}.png'> ";
+                              echo "<span> | #{$player["number"]} | </span>";
+                              foreach($positions as $pos){
+                                  if($pos["player_id"] == $player["player_id"]){
+                                      echo "<span>{$pos["name"]}</span>";
+                                  }
+                              }
+                              echo "</div>";
+                              echo "<div class='result-player-stats'><span>{$player["PTS"]}</span><span>{$player["REB"]}</span><span>{$player["AST"]}</span><span>{$player["BLK"]}</span></div>";
+                              echo "</div>";
+                          }
                     ?>
                 </div>
             </div>
             <div class="pagination">
                 <ul>
                     <?php
-                       if($number_of_pages!=1){
-                           if($page==1){
-                               echo "<li><i class='fas fa-chevron-left'></i></li>";
-                           }else{
-                               echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
-                           }
-                           for ($page_num=1;$page_num<=$number_of_pages;$page_num++){
-                               if($page_num == $page){
-                                   echo "<li class='page active'>".$page."</li>";
-                               }else{
-                                   echo"<li><a href='index.php?";
-                                   if(isset($_GET['q'])){
-                                       echo "q=".$searchterm."&";
-                                   }
-                                   if(isset($_GET['t'])){
-                                       echo "t=".$team."&";
-                                   }
-                                   if(isset($_GET['p'])){
-                                       echo "p=".$position."&";
-                                   }
-                                   echo "page=".$page_num."'>".$page_num."</a></li>";
-                               }
-                           }
-                           if($page==$number_of_pages){
-                               echo "<li><i class='fas fa-chevron-right'></i></li>";
-                           }else{
-                               echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
-                           }
-                       }
+                      if($number_of_pages!=1){
+                          if($page==1){
+                              echo "<li><i class='fas fa-chevron-left'></i></li>";
+                          }else{
+                              echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
+                          }
+                          for ($page_num=1;$page_num<=$number_of_pages;$page_num++){
+                              if($page_num == $page){
+                                  echo "<li class='page active'>".$page."</li>";
+                              }else{
+                                  echo"<li><a href='index.php?";
+                                  if(isset($_GET['q'])){
+                                      echo "q=".$searchterm."&";
+                                  }
+                                  if(isset($_GET['t'])){
+                                      echo "t=".$team."&";
+                                  }
+                                  if(isset($_GET['p'])){
+                                      echo "p=".$position."&";
+                                  }
+                                  echo "page=".$page_num."'>".$page_num."</a></li>";
+                              }
+                          }
+                          if($page==$number_of_pages){
+                              echo "<li><i class='fas fa-chevron-right'></i></li>";
+                          }else{
+                              echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
+                          }
+                      }
                     ?>
                 </ul>
             </div>
