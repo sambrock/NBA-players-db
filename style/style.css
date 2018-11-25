@@ -304,6 +304,15 @@ form{
     z-index: 2;
     position: relative;
 }
+.drop-down::after{
+    content: url("../img/down.svg");
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    position: relative;
+    margin: 0 0 0 10px;
+    vertical-align: middle;
+}
 .drop-down.active{
     padding: 10px;
     background: #fff;
@@ -339,13 +348,20 @@ form{
     width: 300px;
     padding: 10px;
 }
-
 #items-team li{
     width: 283px;
 }
 .drop-down-items ul li:hover{
     background: #032f4f;
     color: #fff;
+}
+#clear-team, #clear-pos{
+    position: absolute;
+    right: 10;
+    color: #1D4289;
+}
+#clear-team:hover, #clear-pos:hover{
+    text-decoration: underline;
 }
 .pagination{
     max-width: 1200px;
@@ -545,3 +561,5 @@ form{
 .design-tbl tr:nth-child(old){
     background: #e3e3e4;
 }
+
+

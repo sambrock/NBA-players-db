@@ -36,7 +36,7 @@ function close(){
 }
 
 //Drop down menus
-$(".drop-down").click(function(){
+$(".drop-down").click(function(e){
     close();
     var header = $(this);
     var items = $(this).next();
@@ -50,7 +50,7 @@ $(".drop-down").click(function(){
         items.addClass("active");
         header.addClass("active");
     }
-    event.stopPropagation();
+    e.stopPropagation();
 })
 
 //close drop downs if clicked outisde
@@ -60,20 +60,22 @@ $(window).click(function() {
     items.hide();
     items.removeClass("active");
     header.removeClass("active");
+    $("#clear-team").remove();
+    $("#clear-pos").remove();
 });
 
 //add value to php
 $("#items-team ul li").on("click", function(e){
     var value = $(this).attr("data-value");
     $("#team-select").val(value);
-    $("#drop-down-team").text(value);
+    $("#team").text(value);
     close();
 })
 
 $("#items-position ul li").on("click", function(e){
     var value = $(this).attr("data-value");
     $("#position-select").val(value);
-    $("#drop-down-position").text(value);
+    $("#position").text(value);
     close();
 })
 
@@ -81,3 +83,36 @@ $("#items-position ul li").on("click", function(e){
 $(".drop-down-items").on("click", function(e){
     e.stopPropagation();
 })
+
+$("#drop-down").on("click", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+})
+
+//add clear button to remove the currrent drop down filter
+$("#team").click(function(){
+    if($(this).text() != "Team" && $("#clear-team").length == 0){
+        $(this).append("<span id='clear-team'>clear</span>");
+        $("#clear-team").click(function(e){
+            close();
+            $("#team").text("Team");
+            $("#team-select").val("");
+            e.stopPropagation();
+        })
+    }
+})
+
+$("#position").click(function(){
+    if($(this).text() != "Position" && $("#clear-pos").length == 0){
+        $(this).append("<span id='clear-pos'>clear</span>");
+        $("#clear-pos").click(function(e){
+            close();
+            $("#position").text("Position");
+            $("#position-select").val("");
+            e.stopPropagation();
+        })
+    }
+})
+
+
+
