@@ -60,6 +60,12 @@ $player_award = $player_award_set->fetchAll();
         </header>
         <main>
             <div class="page-wrapper">
+                <h2>Scenario</h2>
+                <ul>
+                    <li>Uesrs search the database for players in the NBA by first name, last name, team and/or position.</li>
+                    <li>A player's stats are stored in the database as totals, and are convereted to a per game average when displayed.</li>
+                    <li>Related players are ordered first by teammates, then by players who average the closest points per game and play the same position as the player.</li>
+                </ul>
                 <h2>Class diagram</h2>
                 <img src="img/class.svg" height="600">
                 <h2>Physical data model</h2>
