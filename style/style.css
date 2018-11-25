@@ -46,12 +46,11 @@ header.shrink{
 .logo{
     position: absolute;
     margin-top: 10px;
-    left: 20;
     height: 100px;
     transition: 0.2s ease all;
 }
 .logo-txt{
-    margin: auto auto 0 70px;
+    margin: auto auto 0 60px;
     transition: 0.2s ease all;
 }
 .logo-txt a{
@@ -64,7 +63,7 @@ header.shrink{
     height: 50px;
 }
 .logo-txt.shrink{
-    margin-left: 50px;
+    margin-left: 40px;
     color: #fff;
 }
 .logo-txt.shrink a{
