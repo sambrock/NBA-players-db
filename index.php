@@ -67,6 +67,7 @@ if($count == null){
 $number_of_pages = ceil($count/$limit);
 
 ?>
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <meta charset="utf-8">

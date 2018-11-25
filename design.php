@@ -37,6 +37,7 @@ $player_award_set = $conn->query($player_award_q);
 $player_award = $player_award_set->fetchAll();
 
 ?>
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
         <meta charset="utf-8">
