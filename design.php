@@ -269,7 +269,6 @@ $player_award = $player_award_set->fetchAll();
                 <h2>References</h2>
                 <ul>
                     <li>Players images and logos from https://www.wikipedia.org/.</li>
-                    <li></li>
                 </ul>
             </div>
         </main>
