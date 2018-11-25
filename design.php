@@ -266,6 +266,11 @@ $player_award = $player_award_set->fetchAll();
                         </tbody>
                     </table>
                 </div>
+                <h2>References</h2>
+                <ul>
+                    <li>Players images and logos from https://www.wikipedia.org/.</li>
+                    <li></li>
+                </ul>
             </div>
         </main>
         <script src="js/js.js"></script>
