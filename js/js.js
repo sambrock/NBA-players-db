@@ -38,6 +38,8 @@ function close(){
 //Drop down menus
 $(".drop-down").click(function(e){
     close();
+    $("#clear-team").remove();
+    $("#clear-pos").remove();
     var header = $(this);
     var items = $(this).next();
 
