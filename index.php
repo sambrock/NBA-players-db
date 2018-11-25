@@ -154,7 +154,7 @@ $number_of_pages = ceil($count/$limit);
             <div class="results-container">
                 <div class="results">
                     <div class="results-header">
-                        <span class="results-num"><?php echo $count; ?> results</span>
+                        <span class="results-num"><?php echo $count; if($count==1){ echo " result"; } else { echo " results"; }?></span>
                         <div class="result-stat-header">
                             <span><abbr title="Points">PTS</abbr></span>
                             <span><abbr title="Rebonds">REB</abbr></span>
@@ -163,57 +163,57 @@ $number_of_pages = ceil($count/$limit);
                         </div>
                     </div>
                     <?php
-                                                                                  if($players){
-                                                                                      foreach($players as $player){
-                                                                                          echo "<div class='result-player'>";
-                                                                                          echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
-                                                                                          echo "<div class='result-player-info'>";
-                                                                                          echo "<img src='img/teams/{$player["abbreviation"]}.png'> ";
-                                                                                          echo "<span> | #{$player["number"]} | </span>";
-                                                                                          foreach($positions as $pos){
-                                                                                              if($pos["player_id"] == $player["player_id"]){
-                                                                                                  echo "<span>{$pos["name"]}</span>";
-                                                                                              }
-                                                                                          }
-                                                                                          echo "</div>";
-                                                                                          echo "<div class='result-player-stats'><span>{$player["PTS"]}</span><span>{$player["REB"]}</span><span>{$player["AST"]}</span><span>{$player["BLK"]}</span></div>";
-                                                                                          echo "</div>";
-                                                                                      }
+                      if($players){
+                          foreach($players as $player){
+                              echo "<div class='result-player'>";
+                              echo "<div class='result-player-name'><a href='details.php?id={$player["player_id"]}'>{$player["first_name"]} {$player["last_name"]}</a></div>";
+                              echo "<div class='result-player-info'>";
+                              echo "<img src='img/teams/{$player["abbreviation"]}.png'> ";
+                              echo "<span> | #{$player["number"]} | </span>";
+                              foreach($positions as $pos){
+                                  if($pos["player_id"] == $player["player_id"]){
+                                      echo "<span>{$pos["name"]}</span>";
+                                  }
+                              }
+                              echo "</div>";
+                              echo "<div class='result-player-stats'><span>{$player["PTS"]}</span><span>{$player["REB"]}</span><span>{$player["AST"]}</span><span>{$player["BLK"]}</span></div>";
+                              echo "</div>";
+                          }
                     ?>
                 </div>
             </div>
             <div class="pagination">
                 <ul>
                     <?php
-                                                                                      if($number_of_pages!=1){
-                                                                                          if($page==1){
-                                                                                              echo "<li><i class='fas fa-chevron-left'></i></li>";
-                                                                                          }else{
-                                                                                              echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
-                                                                                          }
-                                                                                          for ($page_num=1;$page_num<=$number_of_pages;$page_num++){
-                                                                                              if($page_num == $page){
-                                                                                                  echo "<li class='page active'>".$page."</li>";
-                                                                                              }else{
-                                                                                                  echo"<li><a href='index.php?";
-                                                                                                  if(isset($_GET['q'])){
-                                                                                                      echo "q=".$searchterm."&";
-                                                                                                  }
-                                                                                                  if(isset($_GET['t'])){
-                                                                                                      echo "t=".$team."&";
-                                                                                                  }
-                                                                                                  if(isset($_GET['p'])){
-                                                                                                      echo "p=".$position."&";
-                                                                                                  }
-                                                                                                  echo "page=".$page_num."'>".$page_num."</a></li>";
-                                                                                              }
-                                                                                          }
-                                                                                          if($page==$number_of_pages){
-                                                                                              echo "<li><i class='fas fa-chevron-right'></i></li>";
-                                                                                          }else{
-                                                                                              echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
-                                                                                          }
-                                                                                      }
+                      if($number_of_pages!=1){
+                          if($page==1){
+                              echo "<li><i class='fas fa-chevron-left'></i></li>";
+                          }else{
+                              echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page-1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-left'></i></a></li>";
+                          }
+                          for ($page_num=1;$page_num<=$number_of_pages;$page_num++){
+                              if($page_num == $page){
+                                  echo "<li class='page active'>".$page."</li>";
+                              }else{
+                                  echo"<li><a href='index.php?";
+                                  if(isset($_GET['q'])){
+                                      echo "q=".$searchterm."&";
+                                  }
+                                  if(isset($_GET['t'])){
+                                      echo "t=".$team."&";
+                                  }
+                                  if(isset($_GET['p'])){
+                                      echo "p=".$position."&";
+                                  }
+                                  echo "page=".$page_num."'>".$page_num."</a></li>";
+                              }
+                          }
+                          if($page==$number_of_pages){
+                              echo "<li><i class='fas fa-chevron-right'></i></li>";
+                          }else{
+                              echo "<li><a href='index.php?".str_replace('&page='.$_GET["page"], '&page='.($page+1), $_SERVER['QUERY_STRING'])."'><i class='fas fa-chevron-right'></i></a></li>";
+                          }
+                      }
                     ?>
                 </ul>
             </div>
